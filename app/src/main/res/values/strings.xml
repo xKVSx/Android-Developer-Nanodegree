@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Popular Movies, Stage 1</string>
+    <string name="sort">Sort</string>
+    <string name="BASE_URL">http://image.tmdb.org/t/p/</string>
+    <string name="QUERY_PARAM">q</string>
+    <string name="SORT_PARAM">sort</string>
+    <string name="thumbSize1">w92</string>
+    <string name="thumbSize2">w154</string>
+    <string name="thumbSize3">w185</string>
+    <string name="thumbSize4">w342</string>
+    <string name="thumbSize5">w500</string>
+    <string name="thumbSize6">w780</string>
+    <string name="thumbSize7">original</string>
+    <string name="api_key">9079da83c387d9c6a26c335a693dabbf</string>
+
+</resources>
