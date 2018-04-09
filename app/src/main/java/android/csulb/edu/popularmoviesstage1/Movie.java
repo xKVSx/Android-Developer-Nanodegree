@@ -1,12 +1,20 @@
 package android.csulb.edu.popularmoviesstage1;
 
-public class Movie {
-    String title, image, plot, rating, release;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable{
+    private String id;
+    private String title;
+    private String image;
+    private String plot;
+    private String rating;
+    private String release;
 
     public Movie() {
     }
 
-    public Movie(String title, String image, String plot, String rating, String release) {
+    public Movie(String id, String title, String image, String plot, String rating, String release) {
         this.title = title;
         this.image = image;
         this.plot = plot;
@@ -14,7 +22,20 @@ public class Movie {
         this.release = release;
     }
 
-    void setTitle(String title){
+    private Movie(Parcel in){
+        setId(in.readString());
+        setTitle(in.readString());
+        setImage(in.readString());
+        setPlot(in.readString());
+        setRating(in.readString());
+        setRelease(in.readString());
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public void setTitle(String title){
         this.title = title;
     }
 
@@ -32,6 +53,10 @@ public class Movie {
 
     public void setRelease(String release) {
         this.release = release;
+    }
+
+    public String getId(){
+        return id;
     }
 
     public String getTitle() {
@@ -53,4 +78,37 @@ public class Movie {
     public String getRelease() {
         return release;
     }
+
+    public String toString(){
+        return getId() + "---" + getTitle() + "---" + getImage() + "---" + getPlot() + "---" + getRating() + "---" + getRelease();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(getId());
+        parcel.writeString(getTitle());
+        parcel.writeString(getImage());
+        parcel.writeString(getPlot());
+        parcel.writeString(getRating());
+        parcel.writeString(getRelease());
+    }
+
+    public final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>(){
+
+        @Override
+        public Movie createFromParcel(Parcel parcel) {
+            return new Movie(parcel);
+        }
+
+        @Override
+        public Movie[] newArray(int i) {
+            return new Movie[i];
+        }
+    };
 }
+

@@ -11,6 +11,9 @@
     <string name="thumbSize5">w500</string>
     <string name="thumbSize6">w780</string>
     <string name="thumbSize7">original</string>
+    <string name="MOVIE_URL">https://api.themoviedb.org/3/movie/</string>
+    <string name="popular">popular</string>
+    <string name="top_rated">top_rated</string>
     <string name="api_key">9079da83c387d9c6a26c335a693dabbf</string>
 
 </resources>

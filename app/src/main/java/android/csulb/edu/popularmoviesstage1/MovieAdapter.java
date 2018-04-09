@@ -14,10 +14,10 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
-    private static final String BASE_URL = "http://image.tmdb.org/t/p/";
+    //private static final String BASE_URL = "http://image.tmdb.org/t/p/";
 
     //These are the different poster image sizes. w185 is the recommended size for most phones.
-    private static final String[] SIZE = {"w92, w154, w185, w342, w500, w780, original"};
+    //private static final String[] SIZE = {"w92, w154, w185, w342, w500, w780, original"};
 
     private ArrayList<Movie> movies = new ArrayList();
     private Context context;
@@ -40,8 +40,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         Movie movie = movies.get(position);
         ImageView imageView = holder.thumbnail;
-        //Use Piscaso to load image...
-        Picasso.with(context).load(movie.getImage()).into(imageView);
+        String BASE_URL = context.getString(R.string.BASE_URL);
+        String IMAGE_SIZE = context.getString(R.string.thumbSize3);
+        Picasso.with(context).load(BASE_URL + IMAGE_SIZE + "/" + movie.getImage()).into(imageView);
     }
 
     @Override
@@ -52,19 +53,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             return movies.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder{
+    public class MovieViewHolder extends RecyclerView.ViewHolder{
         public final ImageView thumbnail;
 
         public MovieViewHolder(View itemView){
             super(itemView);
-
             thumbnail = (ImageView) itemView.findViewById(R.id.movie_image);
         }
     }
 
     public void setMovieData(ArrayList<Movie> movieData) {
         movies = movieData;
-        //movies.add(movieData);
         notifyDataSetChanged();
     }
 }
