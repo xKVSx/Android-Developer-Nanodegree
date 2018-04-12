@@ -1,6 +1,5 @@
 package android.csulb.edu.popularmoviesstage1;
 
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,16 +13,16 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
-    //private static final String BASE_URL = "http://image.tmdb.org/t/p/";
-
-    //These are the different poster image sizes. w185 is the recommended size for most phones.
-    //private static final String[] SIZE = {"w92, w154, w185, w342, w500, w780, original"};
+    //{"w92, w154, w185, w342, w500, w780, original"} are different poster image sizes.
+    // w185 is the recommended size for most phones.
 
     private ArrayList<Movie> movies = new ArrayList();
     private Context context;
+    final private ListItemClickListener mOnClickListener;
 
-    public MovieAdapter(Context context){
+    public MovieAdapter(Context context, ListItemClickListener listener){
         this.context = context;
+        mOnClickListener = listener;
     }
 
     @Override
@@ -53,17 +52,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             return movies.size();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder{
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final ImageView thumbnail;
 
         public MovieViewHolder(View itemView){
             super(itemView);
             thumbnail = (ImageView) itemView.findViewById(R.id.movie_image);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickedPosition);
         }
     }
 
     public void setMovieData(ArrayList<Movie> movieData) {
         movies = movieData;
         notifyDataSetChanged();
+    }
+
+    public interface ListItemClickListener{
+        void onListItemClick(int clickedItemIndex);
     }
 }

@@ -20,25 +20,6 @@ public class JsonUtils {
 
     private static ArrayList<Movie> movies = new ArrayList<>();
 
-    /*public static ArrayList<Movie> parsePopularMoviesJson(String json) throws JSONException {
-
-        ArrayList<Movie> movies = new ArrayList<>();
-        JSONObject movie_details = new JSONObject(json);
-
-        //get the movie image thumbnail
-        JSONArray results = movie_details.getJSONArray(RESULTS);
-
-        for(int i = 0; i < results.length(); i++){
-            Movie movie = new Movie();
-            JSONObject movie_results = results.getJSONObject(i);
-            String image = movie_results.getString(IMAGE);
-            movie.setImage(image);
-            movies.add(movie);
-        }
-
-        return movies;
-    }*/
-
     public static ArrayList<Movie> parseMoviesJson(String json) throws JSONException{
 
         JSONObject movie_details = new JSONObject(json);
@@ -94,9 +75,9 @@ public class JsonUtils {
         movie.setPlot(plot);
     }
 
-    public static void parseMovieRating(JSONArray results, Movie movie, int index) throws JSONException{
+    private static void parseMovieRating(JSONArray results, Movie movie, int index) throws JSONException{
 
-        //get the movies rating
+        //get the movie rating
 
         JSONObject movie_results = results.getJSONObject(index);
         String rating = movie_results.getString(RATING);
@@ -104,7 +85,7 @@ public class JsonUtils {
 
     }
 
-    public static void parseMovieReleaseData(JSONArray results, Movie movie, int index) throws JSONException{
+    private static void parseMovieReleaseData(JSONArray results, Movie movie, int index) throws JSONException{
 
         //get the movie release date
 
@@ -112,5 +93,4 @@ public class JsonUtils {
         String release_date = movie_results.getString(RELEASE_DATE);
         movie.setRelease(release_date);
     }
-
 }

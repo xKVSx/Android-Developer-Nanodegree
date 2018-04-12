@@ -9,25 +9,16 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    public static URL buildImageUrl(String imageUrl){
-        return null;
-    }
-
-    public static URL buildDetailUrl(String detailUrl){
-
-        return null;
-    }
-
-    public static URL buildPopularUrl(String popularString){
-        //testing right now
-        URL popularUrl = null;
+    public static URL buildMovieUrl(String movieString){
+        URL movieUrl = null;
         try{
-           popularUrl = new URL(popularString);
+           movieUrl = new URL(movieString);
         }catch (MalformedURLException e) {
             e.printStackTrace();
             }
 
-            return popularUrl;
+
+            return movieUrl;
     }
 
     /**

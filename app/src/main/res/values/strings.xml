@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Popular Movies, Stage 1</string>
+    <string name="movie_image">Movie image</string>
+    <string name="release_date">release date:</string>
+    <string name="rating">rating:</string>
+    <string name="plot">plot:</string>
+    <string name="error_message">An error has occurred. Try connecting to the internet.</string>
+    <string name="detail_error_message">Movie details not available</string>
     <string name="sort">Sort</string>
     <string name="BASE_URL">http://image.tmdb.org/t/p/</string>
     <string name="QUERY_PARAM">q</string>
@@ -14,6 +20,6 @@
     <string name="MOVIE_URL">https://api.themoviedb.org/3/movie/</string>
     <string name="popular">popular</string>
     <string name="top_rated">top_rated</string>
-    <string name="api_key">9079da83c387d9c6a26c335a693dabbf</string>
+    <string name="api_key"></string>
 
 </resources>

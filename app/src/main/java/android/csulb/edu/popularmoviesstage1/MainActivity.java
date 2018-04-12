@@ -1,5 +1,6 @@
 package android.csulb.edu.popularmoviesstage1;
 
+import android.content.Intent;
 import android.csulb.edu.popularmoviesstage1.utils.JsonUtils;
 import android.csulb.edu.popularmoviesstage1.utils.NetworkUtils;
 import android.os.AsyncTask;
@@ -7,17 +8,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener {
 
-    public static final String MOVIE_LIST = "movie_list";
+    private static final String MOVIE_LIST = "movie_list";
+    private static final String SORT_BOOLEAN = "sort";
 
+    private TextView mErrorMessageDisplay;
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
+    private ProgressBar mLoadingIndicator;
     private ArrayList<Movie> movieData;
     private boolean popular = true; //if false, then pull highest rated films
 
@@ -27,37 +35,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRecyclerView = findViewById(R.id.mRecycler_view);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mMovieAdapter = new MovieAdapter(this);
+        mMovieAdapter = new MovieAdapter(this, this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
         if(savedInstanceState == null)
             loadMovieData(setMovieURL(popular));
         else {
             movieData = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
+            popular = savedInstanceState.getBoolean(SORT_BOOLEAN);
             mMovieAdapter.setMovieData(movieData);
         }
+    }
 
+    private void showErrorMessage(){
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
     private String setMovieURL(boolean popular){
-        String movieURL;
+        String movieString;
 
         if(popular) {
-            movieURL = this.getString(R.string.MOVIE_URL)
+            movieString = this.getString(R.string.MOVIE_URL)
                     + this.getString(R.string.popular)
                     + "?api_key=" + this.getString(R.string.api_key);
         }
         else {
-            movieURL = this.getString(R.string.MOVIE_URL)
+            movieString = this.getString(R.string.MOVIE_URL)
                     + this.getString(R.string.top_rated)
                     + "?api_key=" + this.getString(R.string.api_key);
         }
 
-        return movieURL;
+        return movieString;
     }
 
     private void loadMovieData(String movieURL){
@@ -69,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -78,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             try {
-                String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildPopularUrl(params[0]));
+                String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildMovieUrl(params[0]));
                 movieData = JsonUtils.parseMoviesJson(jsonMovieResponse);
 
                 return movieData;
@@ -91,13 +107,25 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Movie> movies) {
-            mMovieAdapter.setMovieData(movies);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if(movies != null) {
+                mMovieAdapter.setMovieData(movies);
+
+                if(mRecyclerView.getVisibility() == View.INVISIBLE)
+                    mRecyclerView.setVisibility(View.VISIBLE);
+
+                if(mErrorMessageDisplay.getVisibility() == View.VISIBLE)
+                    mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+            }
+            else
+                showErrorMessage();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(MOVIE_LIST, movieData);
+        outState.putBoolean(SORT_BOOLEAN, popular);
 
         super.onSaveInstanceState(outState);
     }
@@ -119,17 +147,30 @@ public class MainActivity extends AppCompatActivity {
 
         if(itemClicked == R.id.action_sort_popular && !popular){
             popular = true;
-            movieData.clear();
+            if(movieData != null)
+                movieData.clear();
             loadMovieData(setMovieURL(popular));
+
             return true;
         }
         else if(itemClicked == R.id.action_sort_top_rated && popular){
             popular = false;
-            movieData.clear();
+            if(movieData != null)
+                movieData.clear();
             loadMovieData(setMovieURL(popular));
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        Movie movie = movieData.get(clickedItemIndex);
+        Log.d("onListItemClick", movie.getImage());
+        intent.putExtra(DetailActivity.EXTRA_POSITION, movie);
+        startActivity(intent);
     }
 }
