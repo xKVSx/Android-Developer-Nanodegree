@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +37,6 @@ public class DetailActivity extends AppCompatActivity {
         Movie movie = intent.getParcelableExtra(EXTRA_POSITION);
         String BASE_URL = this.getString(R.string.BASE_URL);
         String IMAGE_SIZE = this.getString(R.string.thumbSize6);
-        Log.d("DetailActivity.class", BASE_URL + IMAGE_SIZE + "/" + movie.getImage());
         Picasso.with(this).load(BASE_URL + IMAGE_SIZE + "/" + movie.getImage()).into(imageDetail);
 
         //Display the title

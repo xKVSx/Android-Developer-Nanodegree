@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns(), GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mMovieAdapter = new MovieAdapter(this, this);
@@ -51,6 +51,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
             popular = savedInstanceState.getBoolean(SORT_BOOLEAN);
             mMovieAdapter.setMovieData(movieData);
         }
+    }
+
+    private int numberOfColumns(){
+        //method to dynamically calculate the number of columns for screen size and orientation
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if(nColumns < 2)
+            return 2;
+
+        return nColumns;
     }
 
     private void showErrorMessage(){
@@ -169,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     public void onListItemClick(int clickedItemIndex) {
         Intent intent = new Intent(this, DetailActivity.class);
         Movie movie = movieData.get(clickedItemIndex);
-        Log.d("onListItemClick", movie.getImage());
         intent.putExtra(DetailActivity.EXTRA_POSITION, movie);
         startActivity(intent);
     }

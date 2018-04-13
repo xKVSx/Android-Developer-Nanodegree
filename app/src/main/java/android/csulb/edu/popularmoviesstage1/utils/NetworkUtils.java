@@ -17,7 +17,6 @@ public class NetworkUtils {
             e.printStackTrace();
             }
 
-
             return movieUrl;
     }
 
