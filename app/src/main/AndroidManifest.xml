@@ -19,6 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailActivity"></activity>
+        
+        <provider
+            android:name="android.csulb.edu.popularmoviesstage1.data.MoviesContentProvider"
+            android:authorities="android.csulb.edu.popularmoviesstage1"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
