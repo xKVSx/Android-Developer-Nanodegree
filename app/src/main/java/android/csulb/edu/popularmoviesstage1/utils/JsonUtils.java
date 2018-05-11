@@ -1,6 +1,7 @@
 package android.csulb.edu.popularmoviesstage1.utils;
 
 import android.csulb.edu.popularmoviesstage1.Movie;
+import android.csulb.edu.popularmoviesstage1.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +18,11 @@ public class JsonUtils {
     private static final String PLOT = "overview";
     private static final String RATING = "vote_average";
     private static final String RELEASE_DATE = "release_date";
-
     private static ArrayList<Movie> movies = new ArrayList<>();
+
+    private static final String KEY = "key";
+    private static final String NAME = "name";
+    private static ArrayList<Trailer> trailers = new ArrayList<>();
 
     public static ArrayList<Movie> parseMoviesJson(String json) throws JSONException{
 
@@ -92,5 +96,22 @@ public class JsonUtils {
         JSONObject movie_results = results.getJSONObject(index);
         String release_date = movie_results.getString(RELEASE_DATE);
         movie.setRelease(release_date);
+    }
+
+    public static ArrayList<Trailer> parseTrailerJson(String json) throws JSONException{
+        //get the trailer name and key
+
+        JSONObject trailer_details = new JSONObject(json);
+        JSONArray results = trailer_details.getJSONArray(RESULTS);
+
+        for (int i = 0; i < results.length(); i++){
+            JSONObject trailer_results = results.getJSONObject(i);
+            String name = trailer_results.getString(NAME);
+            String key = trailer_results.getString(KEY);
+            Trailer trailer = new Trailer(name, key);
+            trailers.add(trailer);
+        }
+
+        return trailers;
     }
 }

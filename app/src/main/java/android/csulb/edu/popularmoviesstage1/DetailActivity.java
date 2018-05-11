@@ -3,8 +3,11 @@ package android.csulb.edu.popularmoviesstage1;
 import android.content.Intent;
 import android.csulb.edu.popularmoviesstage1.utils.DbUtils;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -17,15 +20,21 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     public static final String EXTRA_POSITION = "extra_position";
     public static final int ADD_FAVORITE = 0; //if column is 0, it's not a favorite, thus add it
     public static final int REMOVE_FAVORITE = 1; //if column is 1, it is a favorite, so remove it
 
-    ImageButton addFavoriteButton;
+    private String trailerUrlString;
+    private ArrayList<Trailer> trailers = new ArrayList<>();
+    private ImageButton addFavoriteButton;
+    private Movie movie;
 
-    Movie movie;
+    private RecyclerView mRecyclerView;
+    private TrailerAdapter mTrailerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +46,15 @@ public class DetailActivity extends AppCompatActivity {
         TextView release_date = findViewById(R.id.release_date);
         TextView ratingView = findViewById(R.id.rating);
         TextView plotView = findViewById(R.id.plot);
+        TextView trailerHeader = findViewById(R.id.trailerHeading);
         addFavoriteButton = findViewById(R.id.addFavorite);
+        mRecyclerView = findViewById(R.id.trailer_recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new TrailerAdapter.HorizontalSpaceItemDecoration(4));
+        mTrailerAdapter = new TrailerAdapter(this, this);
+        mRecyclerView.setAdapter(mTrailerAdapter);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -77,26 +94,15 @@ public class DetailActivity extends AppCompatActivity {
         SpannableString plot = new SpannableString(boldTextPlot + movie.getPlot());
         plot.setSpan(new StyleSpan(Typeface.BOLD),0, boldTextPlot.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         plotView.setText(plot);
+
+        //Build trailer Url
+        trailerUrlString = this.getString(R.string.MOVIE_URL) + movie.getId() + "/videos?api_key=" + getString(R.string.api_key);
+        loadTrailerData(trailerUrlString);
     }
 
     private void closeOnError() {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
-    }
-
-    private boolean checkMovie(){
-        /*this method will check if the movie has already been added to the database*/
-        return true;
-    }
-
-    private void addMovie(){
-
-    }
-
-    private void removeFavorite(){
-        /*this method updates a movie currently in the database, removing it as a favorite. Same
-        * as addFavorite with the 0 instead of 1*/
-
     }
 
     public void toggleFavorite(View view){
@@ -112,6 +118,39 @@ public class DetailActivity extends AppCompatActivity {
             default:
                 Log.d("DetailActivity.java", "Movie has not been added to the database");
         }
+    }
+
+    private void loadTrailerData(String trailerUrlString){
+        new FetchTrailerTask(this, new AsyncTaskCompleteListener<Trailer>() {
+
+            @Override
+            public void onTaskComplete(ArrayList<Trailer> result) {
+                trailers = result;
+
+                if(trailers != null)
+                    mTrailerAdapter.setTrailerList(trailers);
+            }
+
+            @Override
+            public void onPostTask() {
+
+            }
+        }).execute(trailerUrlString);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        String movieKey = trailers.get(clickedItemIndex).getKey();
+        Intent launchYouTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_url) + movieKey));
+        launchYouTubeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(launchYouTubeIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        trailers.clear();
+        mTrailerAdapter.setTrailerList(trailers);
     }
 }
 

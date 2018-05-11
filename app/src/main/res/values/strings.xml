@@ -21,6 +21,7 @@
     <string name="popular">popular</string>
     <string name="top_rated">top rated</string>
     <string name="favorites">favorites</string>
+    <string name="youtube_url">https://www.youtube.com/watch?v=</string>
     <string name="api_key">9079da83c387d9c6a26c335a693dabbf</string>
 
 </resources>
