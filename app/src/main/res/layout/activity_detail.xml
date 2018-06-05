@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detail_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -85,6 +86,12 @@
             android:scrollbars="horizontal"
             android:scrollbarSize="5dp"
             android:layout_below="@+id/trailerHeading"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/review_recyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailer_recyclerView"/>
 
     </RelativeLayout>
 

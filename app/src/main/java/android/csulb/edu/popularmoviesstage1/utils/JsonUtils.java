@@ -1,6 +1,7 @@
 package android.csulb.edu.popularmoviesstage1.utils;
 
 import android.csulb.edu.popularmoviesstage1.Movie;
+import android.csulb.edu.popularmoviesstage1.Review;
 import android.csulb.edu.popularmoviesstage1.Trailer;
 
 import org.json.JSONArray;
@@ -22,7 +23,10 @@ public class JsonUtils {
 
     private static final String KEY = "key";
     private static final String NAME = "name";
-    private static ArrayList<Trailer> trailers = new ArrayList<>();
+
+    private static final String REVIEW_AUTHOR = "author";
+    private static final String REVIEW_CONTENT = "content";
+    private static final String REVIEW_ID = "id";
 
     public static ArrayList<Movie> parseMoviesJson(String json) throws JSONException{
 
@@ -100,6 +104,7 @@ public class JsonUtils {
 
     public static ArrayList<Trailer> parseTrailerJson(String json) throws JSONException{
         //get the trailer name and key
+        ArrayList<Trailer> trailers = new ArrayList<>();
 
         JSONObject trailer_details = new JSONObject(json);
         JSONArray results = trailer_details.getJSONArray(RESULTS);
@@ -113,5 +118,24 @@ public class JsonUtils {
         }
 
         return trailers;
+    }
+
+    public static ArrayList<Review> parseReviewJson(String json) throws JSONException{
+        //get the review content, id, and authors name
+        ArrayList<Review> reviews = new ArrayList<>();
+
+        JSONObject review_details = new JSONObject(json);
+        JSONArray results = review_details.getJSONArray(RESULTS);
+
+        for(int i = 0; i < results.length(); i++){
+            JSONObject review_results = results.getJSONObject(i);
+            String author = review_results.getString(REVIEW_AUTHOR);
+            String content = review_results.getString(REVIEW_CONTENT);
+            String id = review_results.getString(REVIEW_ID);
+            Review review = new Review(author, content, id);
+            reviews.add(review);
+        }
+
+        return reviews;
     }
 }

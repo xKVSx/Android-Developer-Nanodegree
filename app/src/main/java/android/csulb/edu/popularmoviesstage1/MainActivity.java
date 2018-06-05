@@ -1,6 +1,9 @@
 package android.csulb.edu.popularmoviesstage1;
 
 import android.content.Intent;
+import android.csulb.edu.popularmoviesstage1.adapters.MovieAdapter;
+import android.csulb.edu.popularmoviesstage1.backgroundtasks.AsyncTaskCompleteListener;
+import android.csulb.edu.popularmoviesstage1.backgroundtasks.FetchMovieTask;
 import android.csulb.edu.popularmoviesstage1.utils.DbUtils;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

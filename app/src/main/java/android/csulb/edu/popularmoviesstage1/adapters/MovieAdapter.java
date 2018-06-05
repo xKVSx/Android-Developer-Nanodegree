@@ -1,6 +1,8 @@
-package android.csulb.edu.popularmoviesstage1;
+package android.csulb.edu.popularmoviesstage1.adapters;
 
 import android.content.Context;
+import android.csulb.edu.popularmoviesstage1.Movie;
+import android.csulb.edu.popularmoviesstage1.R;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
